@@ -7,15 +7,14 @@
     <style>
         :root { --gold: #FFD700; --bg: #0A0A0A; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .admin-card { background: #151515; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 450px; box-shadow: 0 0 30px rgba(0,0,0,0.5); box-sizing: border-box; }
-        h2 { color: var(--gold); text-align: center; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 1px; font-size: 1.3rem; }
+        .admin-card { background: #151515; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); width: 100%; max-width: 480px; box-shadow: 0 0 30px rgba(0,0,0,0.5); box-sizing: border-box; }
+        h2 { color: var(--gold); text-align: center; text-transform: uppercase; margin-bottom: 20px; font-size: 1.3rem; letter-spacing: 1px; }
         label { display: block; margin-top: 15px; font-size: 0.85rem; color: #aaa; font-weight: bold; }
         textarea, input { width: 100%; padding: 12px; margin-top: 5px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; font-size: 1rem; }
         .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
         .btn { padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; text-decoration: none; text-align: center; font-size: 0.9rem; }
-        .btn-update-list { background: #28a745; color: white; } /* Nút mới */
-        .btn-save-all { background: var(--gold); color: #000; }
-        .btn-history { background: #333; color: white; border: 1px solid #555; }
+        .btn-update { background: #28a745; color: white; }
+        .btn-save { background: var(--gold); color: #000; }
         .btn-reset { background: #ff4444; color: white; }
         .btn-back { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
@@ -25,64 +24,60 @@
     <div class="admin-card">
         <h2>⚙️ QUẢN TRỊ TVT</h2>
         
-        <label>DANH SÁCH QUAY (Mỗi dòng 1 món):</label>
-        <textarea id="listInput" rows="6" placeholder="Giải Nhất&#10;Giải Nhì..."></textarea>
+        <label>1. DANH SÁCH QUAY (Mỗi dòng 1 món):</label>
+        <textarea id="listInput" rows="5" placeholder="Nhập tên nhân viên hoặc quà nhỏ..."></textarea>
 
-        <label>LOGO TÂM VÒNG QUAY:</label>
+        <label style="color:var(--gold)">2. QUÀ TẶNG HIỆN TẠI (Hiển thị nổi bật):</label>
+        <input type="text" id="giftInput" placeholder="Ví dụ: 01 Chỉ Vàng SJC">
+
+        <label>3. LOGO TÂM VÒNG QUAY:</label>
         <input type="file" id="logoInput" accept="image/*">
 
-        <label>HÌNH NỀN ỨNG DỤNG:</label>
+        <label>4. HÌNH NỀN ỨNG DỤNG:</label>
         <input type="file" id="bgInput" accept="image/*">
 
         <div class="btn-group">
-            <button class="btn btn-update-list" onclick="updateListOnly()">📝 Cập nhật danh sách quay</button>
-            <button class="btn btn-save-all" onclick="saveAllSettings()">🚀 Lưu tất cả cài đặt</button>
-            <button class="btn btn-history" onclick="clearHistory()">🗑 Xóa lịch sử vinh danh</button>
-            <button class="btn btn-reset" onclick="resetApp()">⚠️ XOÁ TẤT CẢ (KHÔI PHỤC GỐC)</button>
-            <a href="index.html" class="btn btn-back">⬅ Về trang hiển thị</a>
+            <button class="btn btn-update" onclick="updateListAndGift()">📝 Cập nhật Danh sách & Quà</button>
+            <button class="btn btn-save" onclick="saveAllSettings()">🚀 Lưu tất cả cài đặt</button>
+            <button class="btn" style="background:#333; color:white;" onclick="clearHistory()">🗑 Xóa lịch sử vinh danh</button>
+            <button class="btn btn-reset" onclick="resetApp()">⚠️ XOÁ CÀI ĐẶT (GỐC)</button>
+            <a href="index.html" class="btn btn-back">⬅ Về trang Vòng Quay</a>
         </div>
     </div>
 
     <script>
-        // Tải dữ liệu cũ lên form
         window.onload = () => {
             document.getElementById('listInput').value = localStorage.getItem('tvt_items') || "Giải Nhất\nGiải Nhì\nGiải Ba\nMay Mắn";
+            document.getElementById('giftInput').value = localStorage.getItem('tvt_current_gift') || "";
         };
 
-        // CHỈ CẬP NHẬT DANH SÁCH
-        function updateListOnly() {
-            const list = document.getElementById('listInput').value;
-            localStorage.setItem('tvt_items', list);
-            localStorage.setItem('tvt_refresh_trigger', Date.now()); // Kích hoạt index cập nhật
-            alert("Đã cập nhật danh sách quà tặng!");
+        function updateListAndGift() {
+            localStorage.setItem('tvt_items', document.getElementById('listInput').value);
+            localStorage.setItem('tvt_current_gift', document.getElementById('giftInput').value);
+            localStorage.setItem('tvt_refresh_trigger', Date.now());
+            alert("Đã cập nhật danh sách và quà tặng!");
         }
 
-        // LƯU TẤT CẢ (BAO GỒM ẢNH)
         function saveAllSettings() {
-            localStorage.setItem('tvt_items', document.getElementById('listInput').value);
-            const logoFile = document.getElementById('logoInput').files[0];
-            const bgFile = document.getElementById('bgInput').files[0];
-            
-            const reader = new FileReader();
-            if (logoFile) {
-                const r1 = new FileReader();
-                r1.onload = (e) => localStorage.setItem('tvt_logo', e.target.result);
-                r1.readAsDataURL(logoFile);
-            }
-            if (bgFile) {
-                const r2 = new FileReader();
-                r2.onload = (e) => localStorage.setItem('tvt_bg', e.target.result);
-                r2.readAsDataURL(bgFile);
-            }
-            
+            updateListAndGift();
+            const processFile = (id, key) => {
+                const file = document.getElementById(id).files[0];
+                if (file) {
+                    const r = new FileReader();
+                    r.onload = (e) => localStorage.setItem(key, e.target.result);
+                    r.readAsDataURL(file);
+                }
+            };
+            processFile('logoInput', 'tvt_logo');
+            processFile('bgInput', 'tvt_bg');
             setTimeout(() => {
                 localStorage.setItem('tvt_refresh_trigger', Date.now());
-                alert("Đã lưu tất cả cài đặt!");
-            }, 500);
+                alert("Đã lưu toàn bộ cài đặt!");
+            }, 600);
         }
 
         function clearHistory() {
-            if (confirm("Xóa danh sách người đã trúng thưởng?")) {
+            if (confirm("Xóa toàn bộ danh sách đã trúng thưởng?")) {
                 localStorage.removeItem('tvt_history');
                 localStorage.setItem('tvt_clear_trigger', Date.now());
                 alert("Đã xoá lịch sử!");
@@ -90,10 +85,9 @@
         }
 
         function resetApp() {
-            if (confirm("Bạn có chắc chắn muốn xoá toàn bộ và quay về mặc định?")) {
+            if (confirm("Khôi phục cài đặt gốc của hệ thống?")) {
                 localStorage.clear();
                 localStorage.setItem('tvt_refresh_trigger', Date.now());
-                alert("Đã khôi phục cài đặt gốc!");
                 location.reload();
             }
         }
