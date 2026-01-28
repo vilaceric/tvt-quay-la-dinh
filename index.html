@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TVT - Quay Là Dính</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -10,7 +11,7 @@
             --gold-grad: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
             --red-grad: linear-gradient(180deg, #D40000 0%, #8B0000 100%);
         }
-        body { margin: 0; padding: 0; background: #500000; color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; background-size: cover; background-position: center; }
+        body { margin: 0; padding: 0; background: #500000; color: white; font-family: 'Segoe UI', sans-serif; min-height: 100vh; overflow-x: hidden; background-size: cover; background-position: center; }
         
         body::before {
             content: ""; position: fixed; inset: 0;
@@ -18,48 +19,57 @@
             z-index: -1;
         }
 
-        .display-container { display: grid; grid-template-columns: 1fr 380px; height: 100vh; padding: 30px; box-sizing: border-box; gap: 30px; }
-        
-        /* VÒNG QUAY */
-        .wheel-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .wheel-header { text-align: center; margin-bottom: 20px; }
-        .wheel-header h1 { font-size: 3.5rem; color: var(--gold); margin: 0; font-weight: 900; text-shadow: 3px 3px 0px #8B0000, 0 0 20px var(--gold); }
-        .wheel-header p { font-size: 1.2rem; color: var(--gold); margin: 5px 0 0; font-style: italic; font-weight: bold; letter-spacing: 1px; }
+        .display-container { 
+            display: grid; 
+            grid-template-columns: 1fr 380px; 
+            min-height: 100vh; 
+            padding: 20px; 
+            gap: 20px; 
+            box-sizing: border-box; 
+        }
 
-        .wheel-container { position: relative; width: 550px; height: 550px; }
-        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 15px solid var(--gold); box-shadow: 0 0 50px rgba(255, 215, 0, 0.5); }
+        /* --- RESPONSIVE CHO MOBILE --- */
+        @media (max-width: 1024px) {
+            .display-container { grid-template-columns: 1fr; overflow-y: auto; }
+            .wheel-container { width: 90vw !important; height: 90vw !important; max-width: 500px; max-height: 500px; }
+            .vinh-danh-panel { height: 400px; }
+            .wheel-header h1 { font-size: 2.2rem !important; }
+        }
+
+        .wheel-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0; }
+        .wheel-header { text-align: center; margin-bottom: 20px; }
+        .wheel-header h1 { font-size: 3rem; color: var(--gold); margin: 0; font-weight: 900; text-shadow: 2px 2px 0px #8B0000, 0 0 15px var(--gold); }
+        .wheel-header p { font-size: 1.1rem; color: var(--gold); margin: 5px 0; font-weight: bold; }
+
+        .wheel-container { position: relative; width: 520px; height: 520px; }
+        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 10px solid var(--gold); box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); }
         
         .spin-btn { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            width: 110px; height: 110px; background: var(--gold-grad); 
-            border-radius: 50%; border: 5px solid #8B0000; cursor: pointer; z-index: 10; 
+            width: 20%; height: 20%; background: var(--gold-grad); 
+            border-radius: 50%; border: 4px solid #8B0000; cursor: pointer; z-index: 10; 
             display: flex; align-items: center; justify-content: center; 
-            font-weight: 900; color:#8B0000; box-shadow: 0 10px 25px rgba(0,0,0,0.6); 
-            overflow: hidden;
+            font-weight: 900; color:#8B0000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
+            overflow: hidden; font-size: 1.2rem;
         }
         .spin-btn img { width: 100%; height: 100%; object-fit: cover; }
-        .pointer { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); width: 50px; height: 65px; background: var(--gold-grad); clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 5; }
+        .pointer { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 40px; height: 50px; background: var(--gold-grad); clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 5; }
 
-        /* VINH DANH */
-        .vinh-danh-panel { background: var(--red-grad); border: 3px solid var(--gold); border-radius: 25px; padding: 25px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-        .panel-title { color: var(--gold); border-bottom: 2px solid var(--gold); margin:0; padding-bottom: 10px; text-align: center; text-transform: uppercase; }
+        .vinh-danh-panel { background: var(--red-grad); border: 3px solid var(--gold); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .panel-title { color: var(--gold); border-bottom: 2px solid var(--gold); margin:0; padding-bottom: 10px; text-align: center; font-size: 1.2rem; }
         .history-list { overflow-y: auto; flex: 1; }
-        .winner-item { padding: 12px; background: rgba(255,255,255,0.1); border-left: 5px solid var(--gold); margin-bottom: 10px; border-radius: 12px; animation: slideIn 0.4s ease; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        .winner-item { padding: 10px; background: rgba(255,255,255,0.1); border-left: 4px solid var(--gold); margin-bottom: 8px; border-radius: 8px; font-size: 0.95rem; }
 
-        .nav-button { background: transparent; color: var(--gold); border: 2px solid var(--gold); padding: 10px; border-radius: 50px; text-align: center; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
-        .nav-button:hover { background: var(--gold); color: #8B0000; }
+        .nav-button { background: transparent; color: var(--gold); border: 1px solid var(--gold); padding: 10px; border-radius: 50px; text-align: center; text-decoration: none; font-weight: bold; font-size: 0.8rem; }
 
-        /* POPUP */
-        #resultPopup { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .popup-content { text-align: center; border: 6px solid var(--gold); padding: 50px; border-radius: 40px; box-shadow: 0 0 100px var(--gold); background: var(--red-grad); width: 90%; max-width: 500px; }
-        .winner-name { font-size: 4rem; font-weight: 900; color: var(--gold); text-shadow: 4px 4px 0px #400000, 0 0 30px var(--gold); margin: 20px 0; }
+        #resultPopup { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+        .popup-content { text-align: center; border: 4px solid var(--gold); padding: 30px; border-radius: 30px; background: var(--red-grad); width: 100%; max-width: 400px; }
+        .winner-name { font-size: 2.5rem; font-weight: 900; color: var(--gold); margin: 15px 0; text-shadow: 0 0 15px var(--gold); }
         #ytPlayer { position: absolute; left: -9999px; }
     </style>
 </head>
 <body id="mainBody">
     <div id="ytPlayer"></div>
-    
     <audio id="tickSound" src="https://www.soundjay.com/buttons/button-50.mp3"></audio>
     <audio id="cheerSound" src="https://www.soundjay.com/human/sounds/applause-01.mp3"></audio>
 
@@ -69,7 +79,6 @@
                 <h2>TVT</h2>
                 <h2>Quay Là Dính</h2>
                 <p>Tích cực quay tay - vận may sẽ đến</p>
-            </br>
             </div>
             <div class="wheel-container">
                 <div class="pointer"></div>
@@ -78,7 +87,7 @@
             </div>
         </div>
         <div class="vinh-danh-panel">
-            <h2 class="panel-title">🎊 VINH DANH KẾT QUẢ MAY MẮN 🎊</h2>
+            <h2 class="panel-title">🎊 VINH DANH MAY MẮN 🎊</h2>
             <div id="historyList" class="history-list"></div>
             <a href="admin.html" class="nav-button">⚙️ CẤU HÌNH VÒNG QUAY</a>
         </div>
@@ -86,9 +95,9 @@
 
     <div id="resultPopup">
         <div class="popup-content">
-            <h2 style="color:var(--gold); margin:0;">XIN CHÚC MỪNG</h2>
+            <h2 style="color:var(--gold); margin:0; font-size: 1.2rem;">XIN CHÚC MỪNG</h2>
             <div class="winner-name" id="winnerDisplay">...</div>
-            <button onclick="closePopup()" style="background: var(--gold-grad); padding: 15px 50px; border-radius: 50px; border:none; font-weight:bold; cursor:pointer; font-size: 1.2rem; color: #8B0000;">TIẾP TỤC</button>
+            <button onclick="closePopup()" style="background: var(--gold-grad); padding: 12px 40px; border-radius: 50px; border:none; font-weight:bold; cursor:pointer; color: #8B0000;">TIẾP TỤC</button>
         </div>
     </div>
 
@@ -100,7 +109,7 @@
 
         function loadSettings() {
             const savedItems = localStorage.getItem('tvt_items');
-            items = savedItems ? savedItems.split('\n').filter(i => i.trim() !== "") : ["TVT"];
+            items = savedItems ? savedItems.split('\n').filter(i => i.trim() !== "") : ["Giải Nhất","Giải Nhì","Giải Ba","May Mắn"];
             const logo = localStorage.getItem('tvt_logo');
             if (logo) document.getElementById('logoBtn').innerHTML = `<img src="${logo}">`;
             const bg = localStorage.getItem('tvt_bg');
@@ -117,8 +126,7 @@
             ctx.clearRect(0, 0, 600, 600);
             items.forEach((item, i) => {
                 const angle = currentAngle + i * arc;
-                ctx.beginPath(); 
-                ctx.fillStyle = i % 2 === 0 ? "#D40000" : "#FFD700";
+                ctx.beginPath(); ctx.fillStyle = i % 2 === 0 ? "#D40000" : "#FFD700";
                 ctx.moveTo(300, 300); ctx.arc(300, 300, 285, angle, angle + arc); ctx.fill();
                 ctx.save(); ctx.translate(300, 300); ctx.rotate(angle + arc/2); ctx.textAlign = "right";
                 ctx.fillStyle = i % 2 === 0 ? "#FFD700" : "#000"; ctx.font = "bold 20px Arial";
@@ -128,37 +136,17 @@
 
         function spin() {
             if (isSpinning) return;
-            
-            // Mở khóa âm thanh khi người dùng click lần đầu
-            if(!musicInited) {
-                if(player) player.playVideo();
-                tickSound.play().then(() => tickSound.pause()); 
-                cheerSound.play().then(() => cheerSound.pause());
-                musicInited = true;
-            }
-
+            if(!musicInited) { if(player) player.playVideo(); musicInited = true; }
             isSpinning = true;
-            const durations = [5000, 7000, 9000];
-            const duration = durations[Math.floor(Math.random()*durations.length)];
-            const startRotation = currentAngle;
-            const extraRotation = (Math.random() * 5 + 10) * 2 * Math.PI;
-            const startTime = performance.now();
+            const duration = [4000, 5000, 7000][Math.floor(Math.random()*3)];
+            const startRotation = currentAngle, extraRotation = (Math.random() * 5 + 10) * 2 * Math.PI, startTime = performance.now();
             let lastTick = 0;
-
             function animate(time) {
                 const elapsed = time - startTime, progress = Math.min(elapsed / duration, 1);
                 currentAngle = startRotation + extraRotation * (1 - Math.pow(1 - progress, 4));
                 drawWheel();
-
-                // Hiệu ứng "Cạch cạch"
-                const arc = (2 * Math.PI) / items.length;
-                let currentTick = Math.floor(currentAngle / arc);
-                if (currentTick !== lastTick) {
-                    tickSound.currentTime = 0;
-                    tickSound.play().catch(e => console.log("Sound block"));
-                    lastTick = currentTick;
-                }
-
+                let currentTick = Math.floor(currentAngle / (2 * Math.PI / items.length));
+                if (currentTick !== lastTick) { tickSound.currentTime = 0; tickSound.play().catch(()=>{}); lastTick = currentTick; }
                 if (progress < 1) requestAnimationFrame(animate);
                 else { isSpinning = false; finish(); }
             }
@@ -169,19 +157,14 @@
             const arc = (2 * Math.PI) / items.length;
             const index = Math.floor(((1.5 * Math.PI - currentAngle) % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI) / arc);
             const winnerName = items[index];
-            
-            cheerSound.currentTime = 0;
-            cheerSound.play().catch(e => console.log("Sound block"));
-            
+            cheerSound.play().catch(()=>{});
             document.getElementById('winnerDisplay').innerText = winnerName;
             document.getElementById('resultPopup').style.display = 'flex';
-            confetti({ particleCount: 300, spread: 100, origin: { y: 0.6 }, colors: ['#FFD700', '#FFFFFF'] });
-
+            confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 } });
             const history = JSON.parse(localStorage.getItem('tvt_history') || "[]");
-            const winTime = new Date().toLocaleTimeString();
-            history.unshift({ name: winnerName, time: winTime });
+            history.unshift({ name: winnerName, time: new Date().toLocaleTimeString() });
             localStorage.setItem('tvt_history', JSON.stringify(history));
-            addWinnerUI(winnerName, winTime);
+            addWinnerUI(winnerName, new Date().toLocaleTimeString());
         }
 
         function addWinnerUI(name, time) {
@@ -195,17 +178,17 @@
             player = new YT.Player('ytPlayer', { height: '1', width: '1', videoId: 'D9b_gUe-D24', playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': 'D9b_gUe-D24' } });
         }
         function closePopup() { document.getElementById('resultPopup').style.display = 'none'; }
-        window.addEventListener('storage', (e) => { if (e.key === 'tvt_clear_trigger') { document.getElementById('historyList').innerHTML = ""; } else { loadSettings(); } });
-        loadSettings();
-    </script>
-</body>
-    // Lắng nghe sự thay đổi từ trang Admin để cập nhật ngay lập tức
+        
+        // LẮNG NGHE LỆNH TỪ ADMIN
         window.addEventListener('storage', (e) => {
             if (e.key === 'tvt_clear_trigger') {
                 document.getElementById('historyList').innerHTML = "";
             } else if (e.key === 'tvt_refresh_trigger') {
-                // Tải lại toàn bộ cài đặt (danh sách, logo, nền) hoặc Reset
                 location.reload();
             }
         });
+
+        loadSettings();
+    </script>
+</body>
 </html>
