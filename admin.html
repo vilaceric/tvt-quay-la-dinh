@@ -10,11 +10,12 @@
         h2 { color: var(--gold); text-align: center; text-transform: uppercase; margin-bottom: 25px; letter-spacing: 2px; }
         label { display: block; margin-top: 15px; font-size: 0.85rem; color: #aaa; font-weight: bold; }
         textarea, input { width: 100%; padding: 12px; margin-top: 5px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
-        .btn-group { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 25px; }
         .btn { padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; text-decoration: none; text-align: center; font-size: 0.9rem; }
         .btn-save { background: var(--gold); color: #000; }
-        .btn-delete { background: #ff4444; color: white; }
-        .btn-back { background: #333; color: var(--gold); border: 1px solid var(--gold); }
+        .btn-history { background: #333; color: white; border: 1px solid #555; }
+        .btn-reset { background: #ff4444; color: white; }
+        .btn-back { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
         .btn:hover { transform: scale(1.02); opacity: 0.9; }
     </style>
 </head>
@@ -23,7 +24,7 @@
         <h2>⚙️ QUẢN TRỊ HỆ THỐNG</h2>
         
         <label>DANH SÁCH QUAY:</label>
-        <textarea id="listInput" rows="6">Giải Nhất&#10;Giải Nhì&#10;Giải Ba&#10;Chúc May Mắn</textarea>
+        <textarea id="listInput" rows="5">Giải Nhất&#10;Giải Nhì&#10;Giải Ba&#10;Chúc May Mắn</textarea>
 
         <label>LOGO TÂM VÒNG QUAY:</label>
         <input type="file" id="logoInput" accept="image/*">
@@ -33,7 +34,8 @@
 
         <div class="btn-group">
             <button class="btn btn-save" onclick="saveSettings()">🚀 Cập nhật cài đặt</button>
-            <button class="btn btn-delete" onclick="clearHistory()">🗑 Xóa lịch sử vinh danh</button>
+            <button class="btn btn-history" onclick="clearHistory()">🗑 Xóa lịch sử vinh danh</button>
+            <button class="btn btn-reset" onclick="resetApp()">⚠️ XOÁ CÀI ĐẶT (GỐC)</button>
             <a href="index.html" class="btn btn-back">⬅ Về trang hiển thị</a>
         </div>
     </div>
@@ -57,14 +59,26 @@
             };
             processFile(logoFile, 'tvt_logo');
             processFile(bgFile, 'tvt_bg');
-            alert("Đã lưu thành công!");
+            alert("Đã cập nhật cài đặt!");
+            localStorage.setItem('tvt_refresh_trigger', Date.now());
         }
 
         function clearHistory() {
-            if (confirm("Bạn có chắc muốn xóa lịch sử?")) {
+            if (confirm("Xóa lịch sử trúng thưởng?")) {
                 localStorage.removeItem('tvt_history');
                 localStorage.setItem('tvt_clear_trigger', Date.now());
-                alert("Đã xóa!");
+                alert("Đã xóa lịch sử!");
+            }
+        }
+
+        function resetApp() {
+            if (confirm("CẢNH BÁO: Hành động này sẽ xoá toàn bộ Danh sách quà, Logo và Hình nền để quay về mặc định. Bạn có chắc chắn?")) {
+                localStorage.removeItem('tvt_items');
+                localStorage.removeItem('tvt_logo');
+                localStorage.removeItem('tvt_bg');
+                localStorage.setItem('tvt_refresh_trigger', Date.now());
+                alert("Đã khôi phục cài đặt gốc!");
+                location.reload();
             }
         }
     </script>
