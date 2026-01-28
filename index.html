@@ -197,4 +197,13 @@
         loadSettings();
     </script>
 </body>
+    // Lắng nghe sự thay đổi từ trang Admin để cập nhật ngay lập tức
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'tvt_clear_trigger') {
+                document.getElementById('historyList').innerHTML = "";
+            } else if (e.key === 'tvt_refresh_trigger') {
+                // Tải lại toàn bộ cài đặt (danh sách, logo, nền) hoặc Reset
+                location.reload();
+            }
+        });
 </html>
