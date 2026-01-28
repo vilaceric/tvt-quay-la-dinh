@@ -2,170 +2,146 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TVT-QUAY LÀ DÍNH - GOLD EDITION</title>
+    <title>TVT QUAY LÀ DÍNH</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        :root {
-            --gold-primary: #FFD700;
-            --gold-gradient: linear-gradient(135deg, #BF953F 0%, #FCF6BA 20%, #B38728 40%, #FBF5B7 60%, #AA771C 80%);
-            --bg-dark: #0A0A0A;
-        }
-        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-dark); color: white; height: 100vh; overflow: hidden; }
-        .app-container { display: grid; grid-template-columns: 1fr 380px; height: 100vh; padding: 20px; gap: 20px; box-sizing: border-box; }
-        .wheel-section { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        .header h1 { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 3rem; font-weight: 900; text-transform: uppercase; margin: 0; }
-        .wheel-container { position: relative; width: 550px; height: 550px; margin-top: 20px; }
-        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 10px solid var(--gold-primary); box-shadow: 0 0 50px rgba(0,0,0,1); }
-        .spin-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: var(--gold-gradient); border-radius: 50%; border: 4px solid #000; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; transition: 0.3s; }
-        .spin-btn:hover { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 30px var(--gold-primary); }
-        .pointer { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 45px; height: 50px; background: var(--gold-gradient); clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 5; }
-        .sidebar { background: rgba(20,20,20,0.9); border-radius: 20px; padding: 20px; border: 1px solid #BF953F; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        textarea, input { width: 100%; background: #1a1a1a; border: 1px solid #BF953F; color: white; padding: 10px; border-radius: 8px; box-sizing: border-box; }
-        .btn-gold { background: var(--gold-gradient); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; }
-        #resultPopup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 1000; }
-        .popup-content { background: #000; padding: 50px; border-radius: 30px; border: 4px solid var(--gold-primary); text-align: center; box-shadow: 0 0 100px var(--gold-primary); animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
-        .winner-name { font-size: 4rem; font-weight: 900; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 20px 0; }
+        :root { --gold: #FFD700; --gold-grad: linear-gradient(135deg, #BF953F, #FCF6BA, #AA771C); }
+        body { margin: 0; padding: 0; background: #050505; color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; background-size: cover; background-position: center; }
+        
+        .display-container { display: grid; grid-template-columns: 1fr 380px; height: 100vh; padding: 30px; box-sizing: border-box; gap: 30px; }
+        
+        .wheel-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .wheel-container { position: relative; width: 560px; height: 560px; }
+        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 12px solid var(--gold); box-shadow: 0 0 60px rgba(0,0,0,1); }
+        
+        .spin-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 110px; height: 110px; background: var(--gold-grad); border-radius: 50%; border: 4px solid #000; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; font-weight: 900; color:#000; box-shadow: 0 10px 20px rgba(0,0,0,0.5); overflow: hidden; }
+        .spin-btn img { width: 100%; height: 100%; object-fit: cover; }
+        .pointer { position: absolute; top: -35px; left: 50%; transform: translateX(-50%); width: 50px; height: 60px; background: var(--gold-grad); clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 5; }
+
+        .vinh-danh-panel { background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); border: 2px solid var(--gold); border-radius: 25px; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .history-list { overflow-y: auto; flex: 1; }
+        .winner-item { padding: 12px; background: rgba(255,215,0,0.08); border-left: 4px solid var(--gold); margin-bottom: 8px; border-radius: 8px; animation: slideIn 0.4s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+        .nav-button { background: #222; color: var(--gold); border: 1px solid var(--gold); padding: 12px; border-radius: 10px; text-align: center; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: 0.3s; }
+        .nav-button:hover { background: var(--gold); color: #000; }
+
+        #resultPopup { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .popup-content { text-align: center; border: 4px solid var(--gold); padding: 50px; border-radius: 40px; box-shadow: 0 0 80px var(--gold); background: #000; }
+        .winner-name { font-size: 4.5rem; font-weight: 900; background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 20px 0; }
         #ytPlayer { position: absolute; left: -9999px; }
     </style>
 </head>
-<body id="appBody">
-
+<body id="mainBody" onclick="initMusic()">
     <div id="ytPlayer"></div>
-    
-    <div class="app-container">
-        <div class="wheel-section">
-            <div class="header">
-                <h1>TVT - QUAY LÀ DÍNH</h1>
-                <p style="text-align:center; color: var(--gold-primary); letter-spacing: 5px;">TAY QUAY, QUÀ TỚI</p>
-            </div>
+    <div class="display-container">
+        <div class="wheel-box">
+            <h1 style="font-size: 2.8rem; background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 20px 0; text-transform: uppercase; font-weight: 900; letter-spacing: 2px;">TVT QUAY LÀ DÍNH</h1>
             <div class="wheel-container">
                 <div class="pointer"></div>
-                <div class="spin-btn" onclick="spin()" id="logoContainer">TVT</div>
-                <canvas id="wheelCanvas" width="550" height="550"></canvas>
+                <div id="logoBtn" class="spin-btn" onclick="spin()">TVT</div>
+                <canvas id="wheelCanvas" width="600" height="600"></canvas>
             </div>
         </div>
-
-        <div class="sidebar">
-            <div style="font-weight:bold; color:var(--gold-primary); border-bottom:1px solid #BF953F">🏆 VINH DANH</div>
-            <ul id="historyList" style="list-style:none; padding:0; font-size: 0.9rem;"></ul>
-            <div style="font-weight:bold; color:var(--gold-primary); margin-top:10px;">⚙️ CÀI ĐẶT DANH SÁCH VÒNG QUAY</div>
-            <textarea id="listInput" rows="5">Giải Nhất&#10;Giải Nhì&#10;Giải Ba&#10;Voucher 500k&#10;Chúc May Mắn</textarea>
-            <button class="btn-gold" onclick="updateWheel()">Cập nhật DS vòng quay</button>
-            <div style="border: 1px dashed #BF953F; padding: 10px; border-radius: 10px; margin-top: 5px;">
-                <label style="font-size:0.7rem">Thay Logo:</label><input type="file" id="logoInput" accept="image/*">
-                <label style="font-size:0.7rem">Hình nền:</label><input type="file" id="bgInput" accept="image/*">
-                <button class="btn-gold" onclick="applyAdvanced()" style="margin-top:10px; background:#fff">ÁP DỤNG</button>
-            </div>
+        <div class="vinh-danh-panel">
+            <h2 style="color: var(--gold); border-bottom: 2px solid var(--gold); margin:0; padding-bottom: 10px; text-align: center;">🏆 VINH DANH</h2>
+            <div id="historyList" class="history-list"></div>
+            <a href="admin.html" class="nav-button">⚙️ CẤU HÌNH VÒNG QUAY</a>
         </div>
     </div>
 
     <div id="resultPopup">
         <div class="popup-content">
-            <h2 style="color:#fff">XIN CHÚC MỪNG</h2>
-            <div class="winner-name" id="winnerDisplayName">...</div>
-            <button class="btn-gold" onclick="closePopup()" style="width:auto; padding:10px 40px">Tuyệt Vời!</button>
+            <h2 style="color:white; letter-spacing: 5px; margin:0;">XIN CHÚC MỪNG</h2>
+            <div class="winner-name" id="winnerDisplay">...</div>
+            <button onclick="closePopup()" style="background: var(--gold-grad); padding: 15px 50px; border-radius: 50px; border:none; font-weight:bold; cursor:pointer;">TIẾP TỤC</button>
         </div>
     </div>
 
-<script>
-    // 1. ÂM THANH NHÚNG TRỰC TIẾP (Tránh lỗi link chết)
-    const tickSound = new Audio('https://www.soundjay.com/communication/sounds/sewing-machine-01.mp3'); // Tiếng máy khâu (rất hợp với sản xuất giày) làm tiếng cạch cạch
-    const cheerSound = new Audio('https://www.soundjay.com/human/sounds/applause-01.mp3');
-    tickSound.volume = 0.5;
+    <script>
+        const tickSound = new Audio('https://www.soundjay.com/communication/sounds/sewing-machine-01.mp3');
+        const cheerSound = new Audio('https://www.soundjay.com/human/sounds/applause-01.mp3');
+        const canvas = document.getElementById('wheelCanvas'), ctx = canvas.getContext('2d');
+        let items = [], currentAngle = 0, isSpinning = false, player, musicInited = false;
 
-    // 2. YOUTUBE MUSIC
-    let player;
-    let musicInited = false;
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('ytPlayer', { height: '1', width: '1', videoId: 'D9b_gUe-D24', playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': 'D9b_gUe-D24' } });
-    }
-
-    // 3. WHEEL LOGIC
-    const canvas = document.getElementById('wheelCanvas');
-    const ctx = canvas.getContext('2d');
-    let items = [], currentAngle = 0, isSpinning = false;
-    const colorPalette = ['#FFD700', '#2C1E16', '#D4AF37', '#4E342E', '#F4E07D', '#1A1A1A'];
-
-    function drawWheel() {
-        items = document.getElementById('listInput').value.split('\n').filter(i => i.trim() !== "");
-        const arc = (2 * Math.PI) / items.length;
-        ctx.clearRect(0, 0, 550, 550);
-        items.forEach((item, i) => {
-            const angle = currentAngle + i * arc;
-            ctx.beginPath();
-            ctx.fillStyle = colorPalette[i % colorPalette.length];
-            ctx.moveTo(275, 275); ctx.arc(275, 275, 265, angle, angle + arc); ctx.fill();
-            ctx.save(); ctx.translate(275, 275); ctx.rotate(angle + arc / 2); ctx.textAlign = "right";
-            ctx.fillStyle = (i%2===1) ? "#FFD700" : "#000"; ctx.font = "bold 20px Arial";
-            ctx.fillText(item, 250, 10); ctx.restore();
-        });
-    }
-
-    function spin() {
-        if (isSpinning) return;
-        if (!musicInited && player.playVideo) { player.playVideo(); musicInited = true; }
-        
-        isSpinning = true;
-        const durations = [4000, 5000, 7000, 9000, 12000];
-        const duration = durations[Math.floor(Math.random() * durations.length)];
-        const startRotation = currentAngle;
-        const extraRotation = (Math.random() * 8 + 10) * 2 * Math.PI;
-        const startTime = performance.now();
-        let lastTickAngle = 0;
-
-        function animate(time) {
-            const elapsed = time - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easeOut = 1 - Math.pow(1 - progress, 4);
-            currentAngle = startRotation + extraRotation * easeOut;
+        function loadSettings() {
+            const savedItems = localStorage.getItem('tvt_items');
+            items = savedItems ? savedItems.split('\n').filter(i => i.trim() !== "") : ["TVT"];
+            const logo = localStorage.getItem('tvt_logo');
+            if (logo) document.getElementById('logoBtn').innerHTML = `<img src="${logo}">`;
+            const bg = localStorage.getItem('tvt_bg');
+            if (bg) document.body.style.backgroundImage = `url('${bg}')`;
+            const history = JSON.parse(localStorage.getItem('tvt_history') || "[]");
+            const list = document.getElementById('historyList');
+            list.innerHTML = "";
+            history.forEach(winner => addWinnerUI(winner.name, winner.time));
             drawWheel();
+        }
 
-            // Hiệu ứng "Cạch cạch" dựa trên nan quạt
+        function drawWheel() {
             const arc = (2 * Math.PI) / items.length;
-            if (Math.floor(currentAngle / arc) !== lastTickAngle) {
-                tickSound.currentTime = 0; tickSound.play().catch(()=>{});
-                lastTickAngle = Math.floor(currentAngle / arc);
+            ctx.clearRect(0, 0, 600, 600);
+            items.forEach((item, i) => {
+                const angle = currentAngle + i * arc;
+                ctx.beginPath(); ctx.fillStyle = i % 2 === 0 ? "#FFD700" : "#1A1A1A";
+                ctx.moveTo(300, 300); ctx.arc(300, 300, 285, angle, angle + arc); ctx.fill();
+                ctx.save(); ctx.translate(300, 300); ctx.rotate(angle + arc/2); ctx.textAlign = "right";
+                ctx.fillStyle = i % 2 === 0 ? "#000" : "#FFD700"; ctx.font = "bold 18px Arial";
+                ctx.fillText(item, 270, 10); ctx.restore();
+            });
+        }
+
+        function spin() {
+            if (isSpinning) return;
+            isSpinning = true;
+            if(!musicInited && player) { player.playVideo(); musicInited = true; }
+            const durations = [4000, 5000, 7000, 9000, 12000];
+            const duration = durations[Math.floor(Math.random()*durations.length)];
+            const startRotation = currentAngle, extraRotation = (Math.random() * 5 + 10) * 2 * Math.PI, startTime = performance.now();
+            let lastTick = 0;
+
+            function animate(time) {
+                const elapsed = time - startTime, progress = Math.min(elapsed / duration, 1);
+                currentAngle = startRotation + extraRotation * (1 - Math.pow(1 - progress, 4));
+                drawWheel();
+                if (Math.floor(currentAngle / (2*Math.PI/items.length)) !== lastTick) {
+                    tickSound.currentTime = 0; tickSound.play().catch(()=>{}); lastTick = Math.floor(currentAngle / (2*Math.PI/items.length));
+                }
+                if (progress < 1) requestAnimationFrame(animate);
+                else { isSpinning = false; finish(); }
             }
-
-            if (progress < 1) requestAnimationFrame(animate);
-            else { isSpinning = false; finish(); }
+            requestAnimationFrame(animate);
         }
-        requestAnimationFrame(animate);
-    }
 
-    function finish() {
-        const arc = (2 * Math.PI) / items.length;
-        const index = Math.floor(((1.5 * Math.PI - currentAngle) % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI) / arc);
-        const winner = items[index];
-        cheerSound.play().catch(()=>{});
-        document.getElementById('winnerDisplayName').innerText = winner;
-        document.getElementById('resultPopup').style.display = 'flex';
-        confetti({ particleCount: 200, spread: 70, origin: { y: 0.6 }, colors:['#FFD700','#FFFFFF'] });
-        const li = document.createElement('li');
-        li.innerHTML = `<div style="padding:8px; background:rgba(255,215,0,0.1); margin-bottom:5px; border-left:3px solid gold;">${winner} <small>${new Date().toLocaleTimeString()}</small></div>`;
-        document.getElementById('historyList').prepend(li);
-    }
+        function finish() {
+            const arc = (2 * Math.PI) / items.length;
+            const index = Math.floor(((1.5 * Math.PI - currentAngle) % (2 * Math.PI) + (2 * Math.PI)) % (2 * Math.PI) / arc);
+            const winnerName = items[index];
+            const winTime = new Date().toLocaleTimeString();
+            cheerSound.play().catch(()=>{});
+            document.getElementById('winnerDisplay').innerText = winnerName;
+            document.getElementById('resultPopup').style.display = 'flex';
+            confetti({ particleCount: 250, spread: 80, origin: { y: 0.6 }, colors: ['#FFD700', '#FFFFFF'] });
+            const history = JSON.parse(localStorage.getItem('tvt_history') || "[]");
+            history.unshift({ name: winnerName, time: winTime });
+            localStorage.setItem('tvt_history', JSON.stringify(history));
+            addWinnerUI(winnerName, winTime);
+        }
 
-    function applyAdvanced() {
-        const logo = document.getElementById('logoInput');
-        const bg = document.getElementById('bgInput');
-        if (logo.files[0]) {
-            const r = new FileReader(); r.onload = (e) => document.getElementById('logoContainer').innerHTML = `<img src="${e.target.result}" style="width:100%; height:100%; border-radius:50%">`;
-            r.readAsDataURL(logo.files[0]);
+        function addWinnerUI(name, time) {
+            const div = document.createElement('div'); div.className = 'winner-item';
+            div.innerHTML = `<strong>${name}</strong><br><small>${time}</small>`;
+            document.getElementById('historyList').prepend(div);
         }
-        if (bg.files[0]) {
-            const r = new FileReader(); r.onload = (e) => document.body.style.backgroundImage = `url('${e.target.result}')`;
-            r.readAsDataURL(bg.files[0]);
+
+        const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api"; document.head.appendChild(tag);
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('ytPlayer', { height: '1', width: '1', videoId: 'D9b_gUe-D24', playerVars: { 'autoplay': 1, 'loop': 1, 'playlist': 'D9b_gUe-D24' } });
         }
-    }
-    function closePopup() { document.getElementById('resultPopup').style.display = 'none'; }
-    function updateWheel() { currentAngle = 0; drawWheel(); }
-    drawWheel();
-</script>
+        function initMusic() { if (!musicInited && player) { player.playVideo(); musicInited = true; } }
+        function closePopup() { document.getElementById('resultPopup').style.display = 'none'; }
+        window.addEventListener('storage', (e) => { if (e.key === 'tvt_clear_trigger') { document.getElementById('historyList').innerHTML = ""; } else { loadSettings(); } });
+        loadSettings();
+    </script>
 </body>
 </html>
